@@ -56,7 +56,6 @@ function getFollows(r, userId, userName, cursor) {
             line +='</div>';
             elem.innerHTML += line;
         }
-        console.log(r);
         if (es.length > 0 && r.pagination && r.pagination.cursor) {
             getFollows(r, userId, userName, r.pagination.cursor)
         }
