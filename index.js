@@ -72,10 +72,7 @@ function populatePage(r) {
     populateFollows(r, userId, userName);
 }
 
-document.currentName = 'heehee1004';
-getUserByName('heehee1004').then(populatePage);
-
-document.getElementById("findButton").onclick = async function() {
+async function startFind() {
     document.getElementById('title').innerHTML = '';
     document.getElementById('cont').innerHTML = '';
     
@@ -88,3 +85,29 @@ document.getElementById("findButton").onclick = async function() {
         document.getElementById('title').innerHTML = '<div>체크 아이디 플리즈</div>';
     }
 }
+
+async function startFind() {
+    if(event.key === 'Enter') {
+        document.getElementById('title').innerHTML = '';
+        document.getElementById('cont').innerHTML = '';
+
+        const name = document.getElementById('name').value;
+        document.currentName = name;
+        const d = await getUserByName(name);
+        if (d && d.data && d.data.length > 0) {
+            populatePage(d)
+        } else {
+            document.getElementById('title').innerHTML = '<div>체크 아이디 플리즈</div>';
+        }    
+    }
+}
+
+document.currentName = 'heehee1004';
+getUserByName('heehee1004').then(populatePage);
+
+document.getElementById("findButton").onclick = startFind
+document.getElementById("name").addEventListener('keyup', function(event) {
+    if (event.keyCode === 13) {
+        startFind();
+    }
+});
