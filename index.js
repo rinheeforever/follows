@@ -31,7 +31,7 @@ async function getUserById (user_id) {
     return r.json();
 }
 
-function getFollows(r, userId, userName, cursor) {
+function populateFollows(r, userId, userName, cursor) {
     getFollowingById(userId, cursor).then(async r => {
         if(document.currentName.toLowerCase() !== userName.toLowerCase()) {
             return;
@@ -57,7 +57,7 @@ function getFollows(r, userId, userName, cursor) {
             elem.innerHTML += line;
         }
         if (es.length > 0 && r.pagination && r.pagination.cursor) {
-            getFollows(r, userId, userName, r.pagination.cursor)
+            populateFollows(r, userId, userName, r.pagination.cursor)
         }
     });
 }
@@ -69,7 +69,7 @@ function populatePage(r) {
     }
     const userName = r.data[0].login;
     const userId = r.data[0].id;
-    getFollows(r, userId, userName);
+    populateFollows(r, userId, userName);
 }
 
 document.currentName = 'heehee1004';
