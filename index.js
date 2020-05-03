@@ -51,7 +51,7 @@ function populateFollows(r, userId, userName, cursor) {
             }
             const elem = document.getElementById('cont');
             var line = '<div>'
-            line += '<a href="https://www.twitch.tv/' + resp.name + '">' + resp.display_name + '</a>';
+            line += '<a href="https://www.twitch.tv/' + resp.name + '" target="_blank">' + resp.display_name + '</a>';
             line += '\t(' + fDate.getFullYear() + '/' + (fDate.getMonth()+1) + '/' + fDate.getDate() +')';
             line +='</div>';
             elem.innerHTML += line;
