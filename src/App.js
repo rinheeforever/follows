@@ -123,8 +123,8 @@ function App() {
     <div className="App">
       아이디: <input type="text" id="name" placeholder="heehee1004" />
       <input id="findButton" type="button" value="ㄱㄱ" onclick="startFind();" />
-      <p id='title' />
-      <p id='cont' />
+      <div id='title' />
+      <div id='cont' />
     </div>
   );
 }
