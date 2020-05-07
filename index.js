@@ -1,10 +1,23 @@
 const clientId = 'o9ai1orr9lfs2r17tnwgz4hm6i5j6z';
+var accessToken;
+
+async function postToken() {
+    const url = 'https://id.twitch.tv/oauth2/token'
+    + '?client_id=' + clientId
+    + '&client_secret=' + ${{ secrets.TCS }}
+    + '&grant_type=client_credentials';
+    const r = await fetch(url, {
+        method: 'POST'
+    });
+    return r.json();
+}
 
 async function getUserByName(name) {
     const r = await fetch('https://api.twitch.tv/helix/users?login=' + name, {
         method: 'GET',
         headers: {
-            'Client-ID':clientId
+            'Client-ID':clientId,
+            'Authorization': 'Bearer ' + accessToken
         }
     });
     return r.json();
@@ -14,7 +27,8 @@ async function getFollowingById (user_id, after) {
     const r = await fetch('https://api.twitch.tv/helix/users/follows?from_id=' + user_id + (after ? '&after=' + after : ''), {
         method: 'GET',
         headers: {
-            'Client-ID':clientId
+            'Client-ID':clientId,
+            'Authorization': 'Bearer ' + accessToken
         }
     })
     return r.json();
@@ -25,7 +39,8 @@ async function getUserById (user_id) {
         method: 'GET',
         headers: {
             'Client-ID':clientId,
-            'Accept': 'application/vnd.twitchtv.v5+json'
+            'Accept': 'application/vnd.twitchtv.v5+json',
+            'Authorization': 'Bearer ' + accessToken
         }
     })
     return r.json();
@@ -87,7 +102,10 @@ async function startFind() {
 }
 
 document.currentName = 'heehee1004';
-getUserByName('heehee1004').then(populatePage);
+postToken().then(r => {
+    accessToken = r.access_token;
+    getUserByName('heehee1004').then(populatePage);
+});
 
 document.getElementById("name").addEventListener('keyup', function(event) {
     if (event.keyCode === 13) {
