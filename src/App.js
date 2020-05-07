@@ -1,12 +1,13 @@
 import React from 'react';
 import './App.css';
 const clientId = 'o9ai1orr9lfs2r17tnwgz4hm6i5j6z';
+const clientSecret =  process.env.REACT_APP_TCS;
 var accessToken;
 
 async function postToken() {
   const url = 'https://id.twitch.tv/oauth2/token'
     + '?client_id=' + clientId
-    + '&client_secret=' + ${{ process.env.REACT_APP_TCS }}
+    + '&client_secret=' + clientSecret
     + '&grant_type=client_credentials';
   const r = await fetch(url, {
     method: 'POST'
