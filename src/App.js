@@ -113,6 +113,12 @@ function App() {
       getUserByName('heehee1004').then(populatePage);
   });
 
+  document.getElementById("name").addEventListener('keyup', function(event) {
+    if (event.keyCode === 13) {
+        startFind();
+    }
+  });
+
   return (
     <div className="App">
       아이디: <input type="text" id="name" placeholder="heehee1004" />
