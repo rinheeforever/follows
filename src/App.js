@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
 const clientId = 'o9ai1orr9lfs2r17tnwgz4hm6i5j6z';
-const clientSecret =  process.env.REACT_APP_TCS;
+const clientSecret = process.env.REACT_APP_TCS;
 var accessToken;
 
-async function postToken() {
+const postToken = async function () {
   const url = 'https://id.twitch.tv/oauth2/token'
     + '?client_id=' + clientId
     + '&client_secret=' + clientSecret
@@ -15,7 +15,7 @@ async function postToken() {
   return r.json();
 }
 
-async function getUserByName(name) {
+const getUserByName = async function (name) {
   const r = await fetch('https://api.twitch.tv/helix/users?login=' + name, {
     method: 'GET',
     headers: {
@@ -26,7 +26,7 @@ async function getUserByName(name) {
   return r.json();
 }
 
-async function getFollowingById(user_id, after) {
+const getFollowingById = async function (user_id, after) {
   const r = await fetch('https://api.twitch.tv/helix/users/follows?from_id=' + user_id + (after ? '&after=' + after : ''), {
     method: 'GET',
     headers: {
@@ -37,7 +37,7 @@ async function getFollowingById(user_id, after) {
   return r.json();
 }
 
-async function getUserById(user_id) {
+const getUserById = async function (user_id) {
   const r = await fetch('https://api.twitch.tv/kraken/users/' + user_id, {
     method: 'GET',
     headers: {
@@ -49,7 +49,7 @@ async function getUserById(user_id) {
   return r.json();
 }
 
-function populateFollows(r, userId, userName, cursor) {
+const populateFollows = function (r, userId, userName, cursor) {
   getFollowingById(userId, cursor).then(async r => {
     if (document.currentName.toLowerCase() !== userName.toLowerCase()) {
       return;
@@ -80,7 +80,7 @@ function populateFollows(r, userId, userName, cursor) {
   });
 }
 
-function populatePage(r) {
+const populatePage = function (r) {
   if (r.data[0].profile_image_url) {
     const elem = document.getElementById('title');
     elem.innerHTML += '<img src="' + r.data[0].profile_image_url + '" />'
@@ -90,7 +90,7 @@ function populatePage(r) {
   populateFollows(r, userId, userName);
 }
 
-async function startFind() {
+const startFind = async function () {
   document.getElementById('title').innerHTML = '';
   document.getElementById('cont').innerHTML = '';
 
@@ -104,29 +104,31 @@ async function startFind() {
   }
 }
 
-
-
-function App() {
-  document.currentName = 'heehee1004';
-  postToken().then(r => {
+class App extends React.Component {
+  componentDidMount() {
+    document.currentName = 'heehee1004';
+    postToken().then(r => {
       accessToken = r.access_token;
       getUserByName('heehee1004').then(populatePage);
-  });
+    });
 
-  document.getElementById("name").addEventListener('keyup', function(event) {
-    if (event.keyCode === 13) {
+    document.getElementById("name").addEventListener('keyup', function (event) {
+      if (event.keyCode === 13) {
         startFind();
-    }
-  });
-
-  return (
-    <div className="App">
-      아이디: <input type="text" id="name" placeholder="heehee1004" />
-      <input id="findButton" type="button" value="ㄱㄱ" onclick="startFind();" />
-      <div id='title' />
-      <div id='cont' />
-    </div>
-  );
+      }
+    });
+  }
+  
+  render() {
+    
+    return (
+      <div className="App">
+        아이디: <input type="text" id="name" placeholder="heehee1004" />
+        <input id="findButton" type="button" value="ㄱㄱ" onclick="startFind();" />
+        <div id='title' />
+        <div id='cont' />
+      </div>
+    );
+  }
 }
-
 export default App;
