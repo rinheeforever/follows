@@ -117,15 +117,21 @@ class App extends React.Component {
         startFind();
       }
     });
+
+    document.getElementById('findButton').addEventListener('click', function() {
+      startFind();
+    })
   }
   
   render() {
     
     return (
-      <div className="App">
-        아이디: <input type="text" id="name" placeholder="heehee1004" />
-        <input id="findButton" type="button" value="ㄱㄱ" onclick="startFind();" />
-        <div id='title' />
+      <div className="App" class="container">
+        <div class="input">
+          아이디: <input type="text" id="name" placeholder="heehee1004"  />
+          <input id="findButton" type="button" value="고고" />
+        </div>
+        <div id='title' class="title" />
         <div id='cont' />
       </div>
     );

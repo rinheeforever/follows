@@ -1,3 +1,16 @@
 body {
   background-color: #00a3e6;
 }
+
+div.container {
+  padding-left: 20px;
+  padding-top: 10px;
+}
+
+div.input {
+  padding-bottom: 5px;
+}
+
+div.title {
+  padding-bottom: 5px;
+}
