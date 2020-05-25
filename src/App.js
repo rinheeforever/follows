@@ -27,19 +27,46 @@ const getFollowingById = async function (user_id) {
 
 const populateFollows = function (r, userId, userName) {
   getFollowingById(userId).then(r => {
-    const elem = document.getElementById('cont');
+    const elem = document.getElementById('table');
     for (var i = 0; i < r.follows.length; i++) {
       const e = r.follows[i];
       const fDate = new Date(e.created_at);
       const resp = r.follows[i].channel;
-      var line = '<div>'
-      line += '<a href="https://www.twitch.tv/' + resp.name + '" target="_blank">' + resp.display_name + '</a>';
-      line += '\t(' + fDate.getFullYear() + '/' + (fDate.getMonth() + 1) + '/' + fDate.getDate() + ')';
-      line += '</div>';
-      elem.innerHTML += line;
+
+      var row = document.createElement('tr');;
+      var col;
+
+      var nameElem = document.createElement('a');
+      var nameText = document.createTextNode(resp.display_name); 
+      nameElem.appendChild(nameText);
+      nameElem.setAttribute('href', `https://www.twitch.tv/${resp.name}`);
+      nameElem.setAttribute('target', `_blank`);
+      col = document.createElement('td');
+      col.appendChild(nameElem);
+      row.appendChild(col);
+
+      var followLink = document.createElement("input");
+      followLink.type = "button";
+      followLink.value = resp.name;
+      followLink.name = resp.name;
+      followLink.addEventListener('click', async function() {
+        document.getElementById('name').value = resp.name;
+        startFind()
+      });
+      col = document.createElement('td');
+      col.appendChild(followLink);
+      row.appendChild(col);
+
+      var dateFollowed = document.createTextNode(`(${fDate.getFullYear()}/${(fDate.getMonth() + 1)}/${fDate.getDate()})`);
+      col = document.createElement('td');
+      col.appendChild(dateFollowed);
+      row.appendChild(col);
+
+      elem.appendChild(row);
     }
-    if (r.follows.length > 0) {
-      document.offset += pageSize;
+
+    if (elem.childElementCount < r._total) {
+      document.offset = elem.childElementCount;
       populateFollows(r, userId, userName)
     }
   });
@@ -48,7 +75,14 @@ const populateFollows = function (r, userId, userName) {
 const populatePage = function (r) {
   if (r.users[0].logo) {
     const elem = document.getElementById('title');
-    elem.innerHTML += '<img src="' + r.users[0].logo + '" />'
+    var image = document.createElement('a');
+    const imageSrc = document.createElement('img');
+    imageSrc.setAttribute('src', r.users[0].logo);
+    image.appendChild(imageSrc);
+    image.setAttribute('href', `https://www.twitch.tv/${r.users[0].name}`);
+    image.setAttribute('target', `_blank`);
+    
+    elem.appendChild(image);
   }
   const userName = r.users[0].display_name;
   const userId = r.users[0]._id;
@@ -57,11 +91,10 @@ const populatePage = function (r) {
 
 const startFind = async function () {
   document.getElementById('title').innerHTML = '';
-  document.getElementById('cont').innerHTML = '';
+  document.getElementById('table').innerHTML = '';
 
   const name = document.getElementById('name').value;
   document.offset = 0;
-  document.currentName = name;
   const d = await getUserByName(name);
   if (d && d.users && d.users.length > 0) {
     populatePage(d)
@@ -73,7 +106,6 @@ const startFind = async function () {
 class App extends React.Component {
   componentDidMount() {
     document.offset = 0;
-    document.currentName = 'heehee1004';
     getUserByName('heehee1004').then(populatePage);
 
     document.getElementById("name").addEventListener('keyup', function (event) {
@@ -96,7 +128,7 @@ class App extends React.Component {
           <input id="findButton" type="button" value="고고" />
         </div>
         <div id='title' class="title" />
-        <div id='cont' />
+        <table id='table' />
       </div>
     );
   }
