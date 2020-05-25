@@ -72,20 +72,45 @@ const populateFollows = function (r, userId, userName) {
   });
 }
 
+const getTopClipId = async function(channel) {
+  const r = await fetch('https://api.twitch.tv/kraken/clips/top?channel=' + channel + '&period=all&limit=1', {
+    method: 'GET',
+    headers: {
+      'Client-ID': clientId,
+      'Accept': 'application/vnd.twitchtv.v5+json'
+    }
+  })
+  return r.json();
+}
+
 const populatePage = function (r) {
+  const elem = document.getElementById('title');
   if (r.users[0].logo) {
-    const elem = document.getElementById('title');
     var image = document.createElement('a');
     const imageSrc = document.createElement('img');
     imageSrc.setAttribute('src', r.users[0].logo);
     image.appendChild(imageSrc);
     image.setAttribute('href', `https://www.twitch.tv/${r.users[0].name}`);
     image.setAttribute('target', `_blank`);
-    
     elem.appendChild(image);
   }
   const userName = r.users[0].display_name;
   const userId = r.users[0]._id;
+  
+  getTopClipId(r.users[0].name).then(r => {
+    const clipElem = document.getElementById('topclip');
+    const player = `<iframe
+      src="${r.clips[0].embed_url}&autoplay=false"
+      height="288"
+      width="512"
+      style="padding:10px;"
+      frameborder="0"
+      scrolling="no"
+      allowfullscreen="true">
+    </iframe>`;
+    elem.innerHTML += player;
+  });
+
   populateFollows(r, userId, userName);
 }
 
