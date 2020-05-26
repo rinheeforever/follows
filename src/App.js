@@ -98,7 +98,6 @@ const populatePage = function (r) {
   const userId = r.users[0]._id;
   
   getTopClipId(r.users[0].name).then(r => {
-    const clipElem = document.getElementById('topclip');
     const player = `<iframe
       src="${r.clips[0].embed_url}&autoplay=false"
       height="288"
