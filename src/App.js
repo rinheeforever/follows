@@ -99,7 +99,7 @@ const populatePage = function (r) {
   
   getTopClipId(r.users[0].name).then(r => {
     const player = `<iframe
-      src="${r.clips[0].embed_url}&autoplay=false"
+      src="${r.clips[0].embed_url}&autoplay=false&parent=rinheeforever.github.io"
       height="288"
       width="512"
       style="padding:10px;"
